@@ -1,20 +1,29 @@
 package fr.insa.app.userManagement;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
+@RequestMapping("/users")
 public class UserRessource {
 
-    @GetMapping("/users")
-    public int userCount() {
-        return 100; // Exemple : retourne un nombre fixe d'utilisateurs
+    // Liste pour stocker temporairement les utilisateurs (en mémoire)
+    private List<User> users = new ArrayList<>();
+    private int currentId = 1;
+
+    // Récupérer tous les utilisateurs
+    @GetMapping
+    public List<User> getUsers() {
+        return users;
     }
 
-    @GetMapping(value = "/users/{id}")
-    public User getUserInfo(@PathVariable int id) {
-        // Exemple : retourne un utilisateur avec des informations fictives
-        return new User(id, "Cedric", "Chanfreau");
+    // Ajouter un nouvel utilisateur
+    @PostMapping
+    public User createUser(@RequestBody UserDto userDto) {
+        User newUser = new User(currentId++, userDto.getFirstName(), userDto.getLastName(), userDto.getRole());
+        users.add(newUser);
+        return newUser;
     }
 }

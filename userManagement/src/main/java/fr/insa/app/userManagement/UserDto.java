@@ -1,28 +1,18 @@
 package fr.insa.app.userManagement;
 
-public class User {
-    private int id;
+public class UserDto {
     private String firstName;
     private String lastName;
     private String role;
 
     // Constructeur
-    public User(int id, String firstName, String lastName, String role) {
-        this.id = id;
+    public UserDto(String firstName, String lastName, String role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
     }
 
     // Getters et Setters
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getFirstName() {
         return firstName;
     }
