@@ -3,10 +3,10 @@ package fr.insa.app.userManagement;
 public class UserDto {
     private String firstName;
     private String lastName;
-    private String role;
+    private UserStatus role; 
 
     // Constructeur
-    public UserDto(String firstName, String lastName, String role) {
+    public UserDto(String firstName, String lastName, UserStatus role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
@@ -29,11 +29,11 @@ public class UserDto {
         this.lastName = lastName;
     }
 
-    public String getRole() {
+    public UserStatus getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserStatus role) {
         this.role = role;
     }
 }
