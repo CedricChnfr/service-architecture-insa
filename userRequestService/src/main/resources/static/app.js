@@ -1,92 +1,93 @@
-const usersApiUrl = "http://localhost:8090/users";  // URL pour récupérer les utilisateurs
-const requestsApiUrl = "http://localhost:8091/api/requests";  // URL pour créer des requêtes
+document.addEventListener('DOMContentLoaded', function () {
+    // Charger les utilisateurs pour le menu déroulant
+    loadUsers();
 
-// Récupérer tous les utilisateurs et les afficher dans un select
-async function fetchUsers() {
-    try {
-        const response = await fetch(usersApiUrl);
-        if (response.ok) {
-            const users = await response.json();
-            const userSelect = document.getElementById("userSelect");
-            userSelect.innerHTML = ""; // Vide le select avant de le remplir
+    // Gestion de la soumission du formulaire
+    document.getElementById('requestForm').addEventListener('submit', function (event) {
+        event.preventDefault();  // Empêcher la soumission du formulaire classique
 
-            // Ajoute une option vide pour inciter à choisir un utilisateur
-            const defaultOption = document.createElement("option");
-            defaultOption.value = "";
-            defaultOption.textContent = "Select a user";
-            userSelect.appendChild(defaultOption);
+        const userId = document.getElementById('userSelect').value;  // Récupérer l'ID de l'utilisateur sélectionné
+        const requestDescription = document.getElementById('requestDescription').value.trim();  // Description de la requête
 
-            // Ajoute un utilisateur pour chaque élément dans le tableau des utilisateurs
-            users.forEach(user => {
-                const option = document.createElement("option");
-                option.value = user.id;
-                option.textContent = `${user.firstName} ${user.lastName} (${user.role})`;
-                userSelect.appendChild(option);
-            });
-        } else {
-            alert("Error fetching users.");
+        // Vérifier si un utilisateur a été sélectionné
+        if (!userId) {
+            document.getElementById('errorMessage').style.display = 'block';
+            return;
         }
-    } catch (err) {
-        alert("Error: " + err.message);
-    }
-}
 
-// Soumettre la requête à l'API
-document.getElementById("requestForm").addEventListener("submit", async (event) => {
-    event.preventDefault();
+        // Créer la requête avec l'ID de l'utilisateur et la description
+        const newRequest = {
+            userId: userId,
+            description: requestDescription
+        };
 
-    const userId = document.getElementById("userSelect").value;
-    const description = document.getElementById("requestDescription").value;
-
-    if (!userId) {
-        alert("Please select a user.");
-        return;
-    }
-
-    try {
-        const response = await fetch(requestsApiUrl, {
-            method: "POST",
+        // Envoyer la requête POST pour créer la nouvelle requête
+        fetch('http://localhost:8091/api/requests', {
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                description: description
-            }),
+            body: JSON.stringify(newRequest)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to create request');
+            }
+            alert('Request created successfully!');
+            // Rafraîchir la liste des requêtes après la création
+            loadRequests();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to create request.');
         });
+    });
 
-        if (response.ok) {
-            alert("Request submitted successfully!");
-            document.getElementById("requestForm").reset();
-        } else {
-            const error = await response.json();
-            alert(`Error: ${error.message}`);
-        }
-    } catch (err) {
-        alert("Error submitting request: " + err.message);
-    }
-});
+    // Fonction pour récupérer et afficher toutes les requêtes
+    document.getElementById('getRequestsButton').addEventListener('click', function () {
+        loadRequests();
+    });
 
-// Récupérer toutes les requêtes et les afficher
-document.getElementById("getRequestsButton").addEventListener("click", async () => {
-    try {
-        const response = await fetch(requestsApiUrl);
-        if (response.ok) {
-            const requests = await response.json();
-            const requestList = document.getElementById("requestList");
-            requestList.innerHTML = "";
-
-            requests.forEach(request => {
-                const listItem = document.createElement("li");
-                listItem.textContent = `${request.id}: ${request.description} (Status: ${request.status})`;
-                requestList.appendChild(listItem);
+    // Fonction pour charger les utilisateurs dans le menu déroulant
+    function loadUsers() {
+        fetch('http://localhost:8091/api/users')
+            .then(response => response.json())
+            .then(users => {
+                const userSelect = document.getElementById('userSelect');
+                users.forEach(user => {
+                    const option = document.createElement('option');
+                    option.value = user.id;  // Utilise l'ID comme valeur de l'option
+                    option.textContent = user.firstName;  // Affiche le prénom dans la liste
+                    userSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading users:', error);
+                alert('Failed to load users.');
             });
-        } else {
-            alert("Error fetching requests.");
-        }
-    } catch (err) {
-        alert("Error: " + err.message);
+    }
+
+    // Fonction pour charger les requêtes existantes
+    function loadRequests() {
+        fetch('http://localhost:8091/api/requests')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const requestList = document.getElementById('requestList');
+                requestList.innerHTML = '';  // Vider la liste existante
+
+                data.forEach(request => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Request ID: ${request.id}, User ID: ${request.userId}, Description: ${request.description}`;
+                    requestList.appendChild(listItem);
+                });
+            })
+            .catch(error => {
+                console.error('Il y a eu une erreur lors de la récupération des requêtes:', error);
+            });
     }
 });
-
-// Initialiser la liste des utilisateurs au chargement de la page
-document.addEventListener("DOMContentLoaded", fetchUsers);
