@@ -24,7 +24,7 @@ document.getElementById("addUserForm").addEventListener("submit", async (event) 
         if (response.ok) {
             alert("User added successfully!");
             document.getElementById("addUserForm").reset();
-            fetchUsers(); // Rafraîchit la liste des utilisateurs
+            //fetchUsers(); // Rafraîchit la liste des utilisateurs
         } else {
             const error = await response.json();
             alert(`Error: ${error.message}`);

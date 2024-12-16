@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Request Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Create User Request</h1>
+
+        <!-- Formulaire pour créer une requête -->
+        <div>
+            <h2>Choose a User and Create Request</h2>
+            <form id="requestForm">
+                <label for="userSelect">Select User:</label>
+                <select id="userSelect" required>
+                    <option value="" disabled selected>Select a user</option>
+                </select>
+
+                <label for="requestDescription">Request Description:</label>
+                <input type="text" id="requestDescription" placeholder="Describe the request" required />
+
+                <button type="submit">Submit Request</button>
+            </form>
+        </div>
+
+        <!-- Affichage des requêtes existantes -->
+        <div>
+            <h2>Existing Requests</h2>
+            <button id="getRequestsButton">Get All Requests</button>
+            <ul id="requestList"></ul>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
