@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>User Management</h1>
+
+        <!-- Formulaire pour ajouter un utilisateur -->
+        <div>
+            <h2>Add User</h2>
+            <form id="addUserForm">
+                <input type="text" id="firstName" placeholder="First Name" required />
+                <input type="text" id="lastName" placeholder="Last Name" required />
+                <select id="role">
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                    <option value="volunteer">Volunteer</option>
+                </select>
+                <button type="submit">Add User</button>
+            </form>
+        </div>
+
+        <!-- Bouton pour récupérer tous les utilisateurs -->
+        <div>
+            <h2>Users</h2>
+            <button id="getUsersButton">Get All Users</button>
+            <ul id="userList"></ul>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 package fr.insa.app.userManagement;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -21,12 +22,21 @@ public class UserRessource {
     // Endpoint pour ajouter un nouvel utilisateur
     @PostMapping
     public User createUser(@RequestBody UserDto userDto) {
-        if (userDto.getRole() == null) {
-            throw new IllegalArgumentException("Role must be one of the following: admin, user, volunteer.");
-        }
-        
         User newUser = new User(currentId++, userDto.getFirstName(), userDto.getLastName(), userDto.getRole());
-        users.add(newUser);  // Ajoute l'utilisateur à la liste
-        return newUser;  // Renvoie l'utilisateur créé avec l'ID
+        users.add(newUser); // Ajoute l'utilisateur à la liste
+        return newUser; // Renvoie l'utilisateur ajouté
     }
+
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable int id) {
+        boolean removed = users.removeIf(user -> user.getId() == id);
+        if (removed) {
+            return ResponseEntity.noContent().build(); // Suppression réussie
+        } else {
+            return ResponseEntity.notFound().build(); // Utilisateur introuvable
+        }
+    }
+
+
 }
