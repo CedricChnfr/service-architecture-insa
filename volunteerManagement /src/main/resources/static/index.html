@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Volunteer Management</h1>
+
+        <!-- Formulaire pour que le volontaire saisisse ses informations -->
+        <div>
+            <h2>Enter Your Information</h2>
+            <form id="volunteerForm">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" placeholder="First Name" required />
+
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" placeholder="Last Name" required />
+
+                <label for="skills">Skills:</label>
+                <textarea id="skills" placeholder="Enter your skills" required></textarea>
+
+                <h3>Availability for the Week:</h3>
+                <div id="availability">
+                    <div class="day-selection">
+                        <label for="monday">Monday:</label>
+                        <label><input type="radio" name="monday" value="available" required> Available</label>
+                        <label><input type="radio" name="monday" value="unavailable" required> Unavailable</label>
+                    </div>
+                    <div class="day-selection">
+                        <label for="tuesday">Tuesday:</label>
+                        <label><input type="radio" name="tuesday" value="available" required> Available</label>
+                        <label><input type="radio" name="tuesday" value="unavailable" required> Unavailable</label>
+                    </div>
+                    <div class="day-selection">
+                        <label for="wednesday">Wednesday:</label>
+                        <label><input type="radio" name="wednesday" value="available" required> Available</label>
+                        <label><input type="radio" name="wednesday" value="unavailable" required> Unavailable</label>
+                    </div>
+                    <div class="day-selection">
+                        <label for="thursday">Thursday:</label>
+                        <label><input type="radio" name="thursday" value="available" required> Available</label>
+                        <label><input type="radio" name="thursday" value="unavailable" required> Unavailable</label>
+                    </div>
+                    <div class="day-selection">
+                        <label for="friday">Friday:</label>
+                        <label><input type="radio" name="friday" value="available" required> Available</label>
+                        <label><input type="radio" name="friday" value="unavailable" required> Unavailable</label>
+                    </div>
+                    <div class="day-selection">
+                        <label for="saturday">Saturday:</label>
+                        <label><input type="radio" name="saturday" value="available" required> Available</label>
+                        <label><input type="radio" name="saturday" value="unavailable" required> Unavailable</label>
+                    </div>
+                    <div class="day-selection">
+                        <label for="sunday">Sunday:</label>
+                        <label><input type="radio" name="sunday" value="available" required> Available</label>
+                        <label><input type="radio" name="sunday" value="unavailable" required> Unavailable</label>
+                    </div>
+                </div>
+
+                <button type="submit">Submit Availability</button>
+            </form>
+
+            <p id="errorMessage" style="color: red; display: none;">Please fill in all fields correctly.</p>
+            <p id="successMessage" style="color: green; display: none;">Availability submitted successfully!</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
