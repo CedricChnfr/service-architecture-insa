@@ -1,18 +1,21 @@
 package fr.insa.app.userManagement;
 
 public class UserDto {
+
     private String firstName;
     private String lastName;
-    private UserStatus role; 
+    private String role;
 
-    // Constructeur
-    public UserDto(String firstName, String lastName, UserStatus role) {
+    // Constructeurs
+    public UserDto() {}
+
+    public UserDto(String firstName, String lastName, String role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
     }
 
-    // Getters et Setters
+    // Getters et setters
     public String getFirstName() {
         return firstName;
     }
@@ -29,11 +32,11 @@ public class UserDto {
         this.lastName = lastName;
     }
 
-    public UserStatus getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(UserStatus role) {
+    public void setRole(String role) {
         this.role = role;
     }
 }

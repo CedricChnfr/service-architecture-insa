@@ -1,20 +1,22 @@
 package fr.insa.app.userManagement;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-incrémentation
     private int id;
+
     private String firstName;
     private String lastName;
-    private UserStatus role; 
+    private String role;
 
-    // Constructeur
-    public User(int id, String firstName, String lastName, UserStatus role) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.role = role;
-    }
-
-    // Getters et Setters
+    // Getters et setters
     public int getId() {
         return id;
     }
@@ -39,11 +41,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public UserStatus getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(UserStatus role) {
+    public void setRole(String role) {
         this.role = role;
     }
 }

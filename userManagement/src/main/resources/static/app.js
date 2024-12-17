@@ -1,14 +1,16 @@
-const apiBaseUrl = "http://localhost:8090/users";
+const apiBaseUrl = "http://localhost:8090/api/users";
 
 // Ajouter un utilisateur
 document.getElementById("addUserForm").addEventListener("submit", async (event) => {
-    event.preventDefault();
+    event.preventDefault();  // Empêche la soumission classique du formulaire
 
-    const firstName = document.getElementById("firstName").value;
-    const lastName = document.getElementById("lastName").value;
+    // Récupère les valeurs des champs du formulaire
+    const firstName = document.getElementById("firstName").value.trim();
+    const lastName = document.getElementById("lastName").value.trim();
     const role = document.getElementById("role").value;
 
     try {
+        // Envoie la requête POST avec les données utilisateur
         const response = await fetch(apiBaseUrl, {
             method: "POST",
             headers: {
@@ -21,10 +23,11 @@ document.getElementById("addUserForm").addEventListener("submit", async (event) 
             }),
         });
 
+        // Vérifie si la réponse est correcte
         if (response.ok) {
             alert("User added successfully!");
             document.getElementById("addUserForm").reset();
-            //fetchUsers(); // Rafraîchit la liste des utilisateurs
+            fetchUsers();  // Rafraîchit la liste des utilisateurs après l'ajout
         } else {
             const error = await response.json();
             alert(`Error: ${error.message}`);
@@ -34,7 +37,7 @@ document.getElementById("addUserForm").addEventListener("submit", async (event) 
     }
 });
 
-// Récupérer tous les utilisateurs
+// Fonction pour récupérer tous les utilisateurs
 async function fetchUsers() {
     try {
         const response = await fetch(apiBaseUrl);
@@ -44,11 +47,12 @@ async function fetchUsers() {
             const userList = document.getElementById("userList");
             userList.innerHTML = ""; // Vide la liste avant de la remplir
 
+            // Remplir la liste avec les utilisateurs
             users.forEach((user) => {
                 const listItem = document.createElement("li");
                 listItem.textContent = `${user.id}: ${user.firstName} ${user.lastName} (${user.role})`;
 
-                // Bouton pour supprimer un utilisateur
+                // Ajouter un bouton pour supprimer un utilisateur
                 const deleteButton = document.createElement("button");
                 deleteButton.textContent = "✖"; // Symbole de croix
                 deleteButton.style.marginLeft = "10px";
