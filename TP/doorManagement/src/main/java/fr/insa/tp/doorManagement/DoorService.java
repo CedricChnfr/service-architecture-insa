@@ -5,21 +5,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class DoorService {
 
-    private boolean isOpen = false; // Etat initial de la porte (fermée)
+    private String doorStatus = "CLOSED"; // État initial de la porte
 
-    // Méthode pour obtenir l'état actuel de la porte
-    public String getDoorStatus() {
-        return isOpen ? "Open" : "Closed";
+    // Effectuer l'action sur la porte
+    public void performAction(String action) {
+        this.doorStatus = action; // Modifie l'état de la porte
     }
 
-    // Méthode pour effectuer une action sur la porte (ouvrir/fermer)
-    public void performAction(String action) {
-        if (action.equalsIgnoreCase("OPEN")) {
-            isOpen = true;
-        } else if (action.equalsIgnoreCase("CLOSE")) {
-            isOpen = false;
-        } else {
-            throw new IllegalArgumentException("Invalid action. Use 'OPEN' or 'CLOSE'.");
-        }
+    // Récupérer l'état actuel de la porte
+    public String getDoorStatus() {
+        return doorStatus; // Retourne l'état actuel de la porte
     }
 }

@@ -4,61 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orchestrator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        .container {
-            width: 60%;
-            margin: 50px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            font-size: 1.1em;
-            margin-bottom: 5px;
-            display: block;
-        }
-        input[type="number"], input[type="checkbox"], button {
-            padding: 10px;
-            font-size: 1em;
-            width: 100%;
-            margin-top: 5px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .status {
-            margin-top: 30px;
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .status div {
-            margin-bottom: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
     <div class="container">
@@ -77,57 +23,37 @@
             <label for="presence">Présence détectée:</label>
             <input type="checkbox" id="presence">
         </div>
-        <button onclick="updateSystem()">Mettre à jour l'état</button>
+        <div class="form-group">
+            <label for="currentTime">Heure actuelle (HH:mm):</label>
+            <input type="time" id="currentTime">
+        </div>
+        <button onclick="sendSensorData()">Envoyer les données</button>
 
         <!-- Zone d'affichage de l'état des actionneurs -->
         <div class="status">
-            <div><strong>État des fenêtres:</strong> <span id="windowState">Fermée</span></div>
-            <div><strong>État des portes:</strong> <span id="doorState">Fermée</span></div>
-            <div><strong>État des lumières:</strong> <span id="lightState">Allumée</span></div>
-            <div><strong>État de l'alarme:</strong> <span id="alarmState">Désactivée</span></div>
+            <div>
+                <strong>État des fenêtres:</strong> <span id="windowState">Fermée</span>
+                <button onclick="sendPostRequest('http://localhost:8081/api/window?action=OPEN')">Ouvrir</button>
+                <button onclick="sendPostRequest('http://localhost:8081/api/window?action=CLOSE')">Fermer</button>
+            </div>
+            <div>
+                <strong>État des portes:</strong> <span id="doorState">Fermée</span>
+                <button onclick="sendPostRequest('http://localhost:8082/api/door?action=OPEN')">Ouvrir</button>
+                <button onclick="sendPostRequest('http://localhost:8082/api/door?action=CLOSE')">Fermer</button>
+            </div>
+            <div>
+                <strong>État des lumières:</strong> <span id="lightState">Éteinte</span>
+                <button onclick="sendPostRequest('http://localhost:8083/api/light?action=ON')">Allumer</button>
+                <button onclick="sendPostRequest('http://localhost:8083/api/light?action=OFF')">Éteindre</button>
+            </div>
+            <div>
+                <strong>État de l'alarme:</strong> <span id="alarmState">Désactivée</span>
+                <button onclick="sendPostRequest('http://localhost:8084/api/alarm?action=ON')">Activer</button>
+                <button onclick="sendPostRequest('http://localhost:8084/api/alarm?action=OFF')">Désactiver</button>
+            </div>
         </div>
     </div>
 
-    <script>
-        // Fonction pour mettre à jour l'état des actionneurs
-        function updateSystem() {
-            const indoorTemp = parseFloat(document.getElementById("indoorTemp").value);
-            const outdoorTemp = parseFloat(document.getElementById("outdoorTemp").value);
-            const presenceDetected = document.getElementById("presence").checked;
-            
-            // Règles de gestion des fenêtres, portes, lumières, et alarme
-            let windowState = "Fermée";
-            let doorState = "Fermée";
-            let lightState = "Allumée";
-            let alarmState = "Désactivée";
-
-            // Scénario 1 : Gestion des fenêtres selon les températures
-            if (outdoorTemp < indoorTemp && outdoorTemp >= 18 && outdoorTemp <= 27) {
-                windowState = "Ouverte";
-            }
-
-            // Scénario 2 : Gestion des portes, fenêtres, lumières en fonction des heures de travail et de la présence
-            const currentTime = new Date();
-            const currentHour = currentTime.getHours();
-            if (currentHour < 9 || currentHour > 18) { // En dehors des heures de travail
-                if (!presenceDetected) {
-                    doorState = "Fermée";
-                    windowState = "Fermée";
-                    lightState = "Éteinte";
-                }
-            }
-
-            // Scénario 3 : Déclenchement de l'alarme si présence après 22h
-            if (presenceDetected && currentHour >= 22) {
-                alarmState = "Activée";
-            }
-
-            // Mettre à jour l'état des actionneurs dans la page
-            document.getElementById("windowState").textContent = windowState;
-            document.getElementById("doorState").textContent = doorState;
-            document.getElementById("lightState").textContent = lightState;
-            document.getElementById("alarmState").textContent = alarmState;
-        }
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>

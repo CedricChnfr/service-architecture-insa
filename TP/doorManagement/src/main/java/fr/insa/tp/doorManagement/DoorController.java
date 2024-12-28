@@ -15,17 +15,19 @@ public class DoorController {
     @GetMapping("/status")
     public ResponseEntity<String> getDoorStatus() {
         String status = doorService.getDoorStatus();
-        return ResponseEntity.ok("Door is " + status);
+        return ResponseEntity.ok(status);
     }
 
-    // Endpoint pour ouvrir ou fermer la porte
-    @PostMapping("/action")
-    public ResponseEntity<String> controlDoor(@RequestParam String action) {
-        try {
-            doorService.performAction(action);
-            return ResponseEntity.ok("Door is now " + action);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+    // Endpoint pour effectuer une action sur la porte (OPEN/CLOSE)
+    @PostMapping
+    public ResponseEntity<String> performAction(@RequestParam String action) {
+        if (!action.equalsIgnoreCase("OPEN") && !action.equalsIgnoreCase("CLOSE")) {
+            return ResponseEntity.badRequest().body("Invalid action. Use 'OPEN' or 'CLOSE'.");
         }
+
+        doorService.performAction(action.toUpperCase());
+
+        // Retourne l'état actuel
+        return ResponseEntity.ok(action);
     }
 }

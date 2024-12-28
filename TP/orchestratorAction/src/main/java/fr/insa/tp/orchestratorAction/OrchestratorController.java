@@ -10,16 +10,13 @@ public class OrchestratorController {
     @Autowired
     private OrchestratorService orchestratorService;
 
-    @GetMapping("/manage")
-    public ActuatorState manageDevices(@RequestParam("presence") int presence, @RequestParam("temperature") double temperature) {
-        // Créer un objet SensorData avec les valeurs récupérées
-        SensorData sensorData = new SensorData(temperature, 20.0, presence == 1, "12:00");
-        
-        // Récupérer l'état des actionneurs basé sur les données des capteurs
-        ActuatorState actuatorState = new ActuatorState(false, true, false, false); // Initialisation avec des valeurs par défaut
-        actuatorState = orchestratorService.manageWindowsAndTemperature(sensorData, actuatorState);
-        actuatorState = orchestratorService.manageDoorsWindowsLightsAndAlarm(sensorData, actuatorState);
+    @PostMapping("/manage")
+    public ActuatorState manageDevices(@RequestBody SensorData sensorData) {
+        return orchestratorService.manageDevices(sensorData);
+    }
 
-        return actuatorState;
+    @GetMapping("/status")
+    public ActuatorState getDeviceStatus() {
+        return orchestratorService.getCurrentActuatorState();
     }
 }

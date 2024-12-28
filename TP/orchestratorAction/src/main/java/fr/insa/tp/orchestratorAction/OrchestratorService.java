@@ -1,35 +1,95 @@
 package fr.insa.tp.orchestratorAction;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.time.LocalTime;
 
 @Service
 public class OrchestratorService {
 
-    // Méthode qui gère les fenêtres et la température
-    public ActuatorState manageWindowsAndTemperature(SensorData sensorData, ActuatorState actuatorState) {
-        if (sensorData.getOutdoorTemperature() < sensorData.getIndoorTemperature() && 
+    @Autowired
+    private RestTemplate restTemplate;
+
+    private ActuatorState currentActuatorState = new ActuatorState(false, true, false, false);
+
+    public ActuatorState manageDevices(SensorData sensorData) {
+        // Scénario 1: Ouvrir les fenêtres si la température extérieure est inférieure à la température intérieure et entre 18 et 27°
+        if (sensorData.getOutdoorTemperature() < sensorData.getIndoorTemperature() &&
             sensorData.getOutdoorTemperature() >= 18 && sensorData.getOutdoorTemperature() <= 27) {
-            actuatorState.setWindowOpen(true);  // Ouvrir les fenêtres
+            openWindow();
         } else {
-            actuatorState.setWindowOpen(false); // Fermer les fenêtres
+            closeWindow();
         }
-        return actuatorState;
+
+        // Scénario 2: Fermer les portes, fenêtres et lumières en dehors des heures de travail si personne n'est présent
+        LocalTime currentTime = LocalTime.parse(sensorData.getCurrentTime());
+        if ((currentTime.isBefore(LocalTime.of(9, 0)) || currentTime.isAfter(LocalTime.of(18, 0))) && !sensorData.isPresenceDetected()) {
+            closeDoor();
+            closeWindow();
+            turnOffLight();
+        }
+
+        // Scénario 3: Activer l'alarme si présence détectée après 22h
+        if (sensorData.isPresenceDetected() && currentTime.isAfter(LocalTime.of(22, 0))) {
+            triggerAlarm();
+        } else {
+            disableAlarm();
+        }
+
+        return currentActuatorState;
     }
 
-    // Méthode qui gère les portes, fenêtres, lumières et alarmes
-    public ActuatorState manageDoorsWindowsLightsAndAlarm(SensorData sensorData, ActuatorState actuatorState) {
-        if (!sensorData.isPresent() && (sensorData.getTimeOfDay().compareTo("22:00") >= 0 || sensorData.getTimeOfDay().compareTo("06:00") <= 0)) {
-            actuatorState.setWindowOpen(false);  // Fermer les fenêtres
-            actuatorState.setDoorClosed(true);   // Fermer les portes
-            actuatorState.setLightOn(false);     // Éteindre les lumières
-        }
+    public ActuatorState getCurrentActuatorState() {
+        return currentActuatorState;
+    }
 
-        if (sensorData.isPresent() && sensorData.getTimeOfDay().compareTo("22:00") >= 0) {
-            actuatorState.setAlarmTriggered(true);  // Activer l'alarme
-        } else {
-            actuatorState.setAlarmTriggered(false); // Désactiver l'alarme
-        }
+    private void openWindow() {
+        String windowServiceUrl = "http://localhost:8081/api/window?action=OPEN";
+        restTemplate.postForObject(windowServiceUrl, null, String.class);
+        currentActuatorState.setWindowOpen(true);
+    }
 
-        return actuatorState;
+    private void closeWindow() {
+        String windowServiceUrl = "http://localhost:8081/api/window?action=CLOSE";
+        restTemplate.postForObject(windowServiceUrl, null, String.class);
+        currentActuatorState.setWindowOpen(false);
+    }
+
+    private void openDoor() {
+        String doorServiceUrl = "http://localhost:8082/api/door?action=OPEN";
+        restTemplate.postForObject(doorServiceUrl, null, String.class);
+        currentActuatorState.setDoorClosed(false);
+    }
+
+    private void closeDoor() {
+        String doorServiceUrl = "http://localhost:8082/api/door?action=CLOSE";
+        restTemplate.postForObject(doorServiceUrl, null, String.class);
+        currentActuatorState.setDoorClosed(true);
+    }
+
+    private void turnOnLight() {
+        String lightServiceUrl = "http://localhost:8083/api/light?action=ON";
+        restTemplate.postForObject(lightServiceUrl, null, String.class);
+        currentActuatorState.setLightOn(true);
+    }
+
+    private void turnOffLight() {
+        String lightServiceUrl = "http://localhost:8083/api/light?action=OFF";
+        restTemplate.postForObject(lightServiceUrl, null, String.class);
+        currentActuatorState.setLightOn(false);
+    }
+
+    private void triggerAlarm() {
+        String alarmServiceUrl = "http://localhost:8084/api/alarm?action=ON";
+        restTemplate.postForObject(alarmServiceUrl, null, String.class);
+        currentActuatorState.setAlarmTriggered(true);
+    }
+
+    private void disableAlarm() {
+        String alarmServiceUrl = "http://localhost:8084/api/alarm?action=OFF";
+        restTemplate.postForObject(alarmServiceUrl, null, String.class);
+        currentActuatorState.setAlarmTriggered(false);
     }
 }

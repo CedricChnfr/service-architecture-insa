@@ -2,14 +2,14 @@ package fr.insa.tp.doorManagement;
 
 public class DoorAction {
 
-    private String action; 
+    private String action;
 
-    // Constructeurs
+    // Constructeur
     public DoorAction(String action) {
         this.action = action;
     }
 
-    // Getters et setters
+    // Getter et setter
     public String getAction() {
         return action;
     }
@@ -17,5 +17,4 @@ public class DoorAction {
     public void setAction(String action) {
         this.action = action;
     }
-
 }

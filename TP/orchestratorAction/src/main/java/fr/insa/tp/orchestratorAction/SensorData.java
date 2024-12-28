@@ -4,18 +4,16 @@ public class SensorData {
 
     private double indoorTemperature;
     private double outdoorTemperature;
-    private boolean isPresent;  // Indique si une personne est présente
-    private String timeOfDay;  // Heure actuelle (ex. "22:00")
+    private boolean presenceDetected;
+    private String currentTime;
 
-    // Constructeur
-    public SensorData(double indoorTemperature, double outdoorTemperature, boolean isPresent, String timeOfDay) {
+    public SensorData(double indoorTemperature, double outdoorTemperature, boolean presenceDetected, String currentTime) {
         this.indoorTemperature = indoorTemperature;
         this.outdoorTemperature = outdoorTemperature;
-        this.isPresent = isPresent;
-        this.timeOfDay = timeOfDay;
+        this.presenceDetected = presenceDetected;
+        this.currentTime = currentTime;
     }
 
-    // Getters et Setters
     public double getIndoorTemperature() {
         return indoorTemperature;
     }
@@ -32,19 +30,19 @@ public class SensorData {
         this.outdoorTemperature = outdoorTemperature;
     }
 
-    public boolean isPresent() {
-        return isPresent;
+    public boolean isPresenceDetected() {
+        return presenceDetected;
     }
 
-    public void setPresent(boolean present) {
-        isPresent = present;
+    public void setPresenceDetected(boolean presenceDetected) {
+        this.presenceDetected = presenceDetected;
     }
 
-    public String getTimeOfDay() {
-        return timeOfDay;
+    public String getCurrentTime() {
+        return currentTime;
     }
 
-    public void setTimeOfDay(String timeOfDay) {
-        this.timeOfDay = timeOfDay;
+    public void setCurrentTime(String currentTime) {
+        this.currentTime = currentTime;
     }
 }
