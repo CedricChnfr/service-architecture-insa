@@ -1,26 +1,22 @@
 package fr.insa.tp.temperatureManagement;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TemperatureService {
 
-    @Autowired
-    private WindowClient windowClient;
+    // Simuler des valeurs de température pour l'exemple
+    private double indoorTemperature = 22.5; // Température intérieure en °C
+    private double outdoorTemperature = 15.0; // Température extérieure en °C
 
-    // Vérifier la température et prendre une décision
-    public String analyzeTemperature(TemperatureData temperatureData) {
-        double indoorTemp = temperatureData.getIndoorTemperature();
-        double outdoorTemp = temperatureData.getOutdoorTemperature();
+    // Méthode pour récupérer les données de température
+    public TemperatureData getTemperatureData() {
+        return new TemperatureData(indoorTemperature, outdoorTemperature);
+    }
 
-        // Logique métier : ouvrir les fenêtres si les conditions sont remplies
-        if (outdoorTemp < indoorTemp && outdoorTemp >= 18 && outdoorTemp <= 27) {
-            windowClient.openWindow();
-            return "Conditions met: Windows opened.";
-        } else {
-        	windowClient.closeWindow();
-            return "Conditions met: Windows closed.";
-        }
+    // Méthode pour mettre à jour la température intérieure et extérieure (si nécessaire)
+    public void updateTemperatures(double indoor, double outdoor) {
+        this.indoorTemperature = indoor;
+        this.outdoorTemperature = outdoor;
     }
 }

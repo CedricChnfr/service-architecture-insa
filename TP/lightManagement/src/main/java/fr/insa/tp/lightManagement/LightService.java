@@ -2,24 +2,18 @@ package fr.insa.tp.lightManagement;
 
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 public class LightService {
 
-    private final List<LightAction> actions = new ArrayList<>();
+    private String lightStatus = "OFF"; // État initial de la lumière
 
-    // Allumer ou éteindre la lumière
-    public LightAction performAction(String action) {
-        LightAction lightAction = new LightAction(action, LocalDateTime.now());
-        actions.add(lightAction);
-        return lightAction;
+    // Effectuer l'action sur la lumière
+    public void performAction(String action) {
+        this.lightStatus = action; // Modifie l'état de la lumière
     }
 
-    // Récupérer l'historique des actions
-    public List<LightAction> getActionHistory() {
-        return new ArrayList<>(actions); // Retourne une copie pour éviter les modifications directes
+    // Récupérer l'état actuel de la lumière
+    public String getLightStatus() {
+        return lightStatus; // Retourne l'état actuel de la lumière
     }
 }

@@ -2,24 +2,18 @@ package fr.insa.tp.windowsManagement;
 
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 public class WindowService {
 
-    private final List<WindowAction> actions = new ArrayList<>();
+    private String windowStatus = "CLOSED"; // État initial de la fenêtre
 
-    // Effectuer une action sur une fenêtre
-    public WindowAction performAction(String action) {
-        WindowAction windowAction = new WindowAction(action, LocalDateTime.now());
-        actions.add(windowAction);
-        return windowAction;
+    // Effectuer l'action sur la fenêtre
+    public void performAction(String action) {
+        this.windowStatus = action; // Modifie l'état de la fenêtre
     }
 
-    // Récupérer l'historique des actions
-    public List<WindowAction> getActionHistory() {
-        return new ArrayList<>(actions); // Retourne une copie pour éviter les modifications directes
+    // Récupérer l'état actuel de la fenêtre
+    public String getWindowStatus() {
+        return windowStatus; // Retourne l'état actuel de la fenêtre
     }
 }

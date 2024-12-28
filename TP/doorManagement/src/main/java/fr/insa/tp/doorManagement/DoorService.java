@@ -2,24 +2,24 @@ package fr.insa.tp.doorManagement;
 
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 public class DoorService {
 
-    private final List<DoorAction> actions = new ArrayList<>();
+    private boolean isOpen = false; // Etat initial de la porte (fermée)
 
-    // Effectuer une action sur la porte
-    public DoorAction performAction(String action) {
-        DoorAction doorAction = new DoorAction(action, LocalDateTime.now());
-        actions.add(doorAction);
-        return doorAction;
+    // Méthode pour obtenir l'état actuel de la porte
+    public String getDoorStatus() {
+        return isOpen ? "Open" : "Closed";
     }
 
-    // Récupérer l'historique des actions
-    public List<DoorAction> getActionHistory() {
-        return new ArrayList<>(actions); // Retourne une copie pour éviter les modifications directes
+    // Méthode pour effectuer une action sur la porte (ouvrir/fermer)
+    public void performAction(String action) {
+        if (action.equalsIgnoreCase("OPEN")) {
+            isOpen = true;
+        } else if (action.equalsIgnoreCase("CLOSE")) {
+            isOpen = false;
+        } else {
+            throw new IllegalArgumentException("Invalid action. Use 'OPEN' or 'CLOSE'.");
+        }
     }
 }

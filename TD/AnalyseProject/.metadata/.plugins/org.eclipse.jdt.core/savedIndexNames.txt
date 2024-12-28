@@ -1,3 +1,0 @@
-INDEX VERSION 1.134+/home/chanfreau/INSA/Service_Architecture_MOOC/Tuto1/.metadata/.plugins/org.eclipse.jdt.core
-2033474281.index
-438849299.index

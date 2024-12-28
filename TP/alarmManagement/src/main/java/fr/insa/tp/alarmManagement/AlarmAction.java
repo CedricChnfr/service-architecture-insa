@@ -1,33 +1,20 @@
 package fr.insa.tp.alarmManagement;
 
-
-import java.time.LocalDateTime;
-
 public class AlarmAction {
 
     private String action;
-    private LocalDateTime timestamp;
 
-    // Constructeurs
-    public AlarmAction(String action, LocalDateTime timestamp) {
+    // Constructeur
+    public AlarmAction(String action) {
         this.action = action;
-        this.timestamp = timestamp;
     }
 
-    // Getters et setters
+    // Getter et setter
     public String getAction() {
         return action;
     }
 
     public void setAction(String action) {
         this.action = action;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
     }
 }
