@@ -4,6 +4,7 @@ function sendSensorData() {
     let indoorTemperature = document.getElementById("indoorTemp").value;
     let outdoorTemperature = document.getElementById("outdoorTemp").value;
     let currentTime = document.getElementById("currentTime").value;
+		
 
     // Construire les données à envoyer
     let data = {

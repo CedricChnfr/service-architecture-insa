@@ -19,7 +19,7 @@ public class OrchestratorService {
     private List<SensorHistory> sensorHistoryList = new ArrayList<>();
 
     public ActuatorState manageDevices(SensorData sensorData) {
-        LocalTime currentTime = LocalTime.parse(sensorData.getCurrentTime());
+    	LocalTime currentTime = LocalTime.now();
 
         // Scénario 1: Ouvrir les fenêtres si la température extérieure est inférieure à la température intérieure et entre 18 et 27°
         if (sensorData.getOutdoorTemperature() < sensorData.getIndoorTemperature() &&
