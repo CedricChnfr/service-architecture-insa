@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class OrchestratorService {
@@ -12,9 +15,12 @@ public class OrchestratorService {
     @Autowired
     private RestTemplate restTemplate;
 
-    private ActuatorState currentActuatorState = new ActuatorState(false, true, false, false);
+    private ActuatorState currentActuatorState = new ActuatorState(false, false, false, false);
+    private List<SensorHistory> sensorHistoryList = new ArrayList<>();
 
     public ActuatorState manageDevices(SensorData sensorData) {
+        LocalTime currentTime = LocalTime.parse(sensorData.getCurrentTime());
+
         // Scénario 1: Ouvrir les fenêtres si la température extérieure est inférieure à la température intérieure et entre 18 et 27°
         if (sensorData.getOutdoorTemperature() < sensorData.getIndoorTemperature() &&
             sensorData.getOutdoorTemperature() >= 18 && sensorData.getOutdoorTemperature() <= 27) {
@@ -24,7 +30,6 @@ public class OrchestratorService {
         }
 
         // Scénario 2: Fermer les portes, fenêtres et lumières en dehors des heures de travail si personne n'est présent
-        LocalTime currentTime = LocalTime.parse(sensorData.getCurrentTime());
         if ((currentTime.isBefore(LocalTime.of(9, 0)) || currentTime.isAfter(LocalTime.of(18, 0))) && !sensorData.isPresenceDetected()) {
             closeDoor();
             closeWindow();
@@ -38,11 +43,24 @@ public class OrchestratorService {
             disableAlarm();
         }
 
+        // Ajouter l'état actuel des capteurs à l'historique
+        sensorHistoryList.add(new SensorHistory(
+            currentActuatorState.isWindowOpen(),
+            currentActuatorState.isDoorOpen(),
+            currentActuatorState.isLightOn(),
+            currentActuatorState.isAlarmTriggered(),
+            LocalDateTime.now()
+        ));
+
         return currentActuatorState;
     }
 
     public ActuatorState getCurrentActuatorState() {
         return currentActuatorState;
+    }
+
+    public List<SensorHistory> getSensorHistory() {
+        return sensorHistoryList;
     }
 
     private void openWindow() {
@@ -60,13 +78,13 @@ public class OrchestratorService {
     private void openDoor() {
         String doorServiceUrl = "http://localhost:8082/api/door?action=OPEN";
         restTemplate.postForObject(doorServiceUrl, null, String.class);
-        currentActuatorState.setDoorClosed(false);
+        currentActuatorState.setDoorOpen(false);
     }
 
     private void closeDoor() {
         String doorServiceUrl = "http://localhost:8082/api/door?action=CLOSE";
         restTemplate.postForObject(doorServiceUrl, null, String.class);
-        currentActuatorState.setDoorClosed(true);
+        currentActuatorState.setDoorOpen(true);
     }
 
     private void turnOnLight() {

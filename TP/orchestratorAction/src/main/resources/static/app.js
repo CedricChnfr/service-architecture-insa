@@ -13,6 +13,8 @@ function sendSensorData() {
         currentTime: currentTime
     };
 
+    console.log("Sending sensor data:", data);
+
     // Effectuer la requête HTTP POST
     fetch('http://localhost:8090/api/orchestrator/manage', {
         method: 'POST',
@@ -21,8 +23,14 @@ function sendSensorData() {
         },
         body: JSON.stringify(data)
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log("Response from server:", data);
         // Mettre à jour les états des capteurs après la réponse de l'API
         document.getElementById("windowState").innerHTML = data.isWindowOpen ? 'Ouverte' : 'Fermée';
         document.getElementById("doorState").innerHTML = data.isDoorClosed ? 'Fermée' : 'Ouverte';
@@ -41,9 +49,10 @@ function getDeviceStatus() {
     })
     .then(response => response.json())
     .then(data => {
+        console.log("Current device status:", data);
         // Mettre à jour les états des capteurs après la réponse de l'API
         document.getElementById("windowState").innerHTML = data.isWindowOpen ? 'Ouverte' : 'Fermée';
-        document.getElementById("doorState").innerHTML = data.isDoorClosed ? 'Fermée' : 'Ouverte';
+        document.getElementById("doorState").innerHTML = data.isDoorOpen ? 'Ouverte' : 'Fermée';
         document.getElementById("lightState").innerHTML = data.isLightOn ? 'Allumée' : 'Éteinte';
         document.getElementById("alarmState").innerHTML = data.isAlarmTriggered ? 'Activée' : 'Désactivée';
     })

@@ -3,14 +3,14 @@ package fr.insa.tp.orchestratorAction;
 public class ActuatorState {
 
     private boolean isWindowOpen;
-    private boolean isDoorClosed;
+    private boolean isDoorOpen;
     private boolean isLightOn;
     private boolean isAlarmTriggered;
 
     // Constructeur
-    public ActuatorState(boolean isWindowOpen, boolean isDoorClosed, boolean isLightOn, boolean isAlarmTriggered) {
+    public ActuatorState(boolean isWindowOpen, boolean isDoorOpen, boolean isLightOn, boolean isAlarmTriggered) {
         this.isWindowOpen = isWindowOpen;
-        this.isDoorClosed = isDoorClosed;
+        this.isDoorOpen = isDoorOpen;
         this.isLightOn = isLightOn;
         this.isAlarmTriggered = isAlarmTriggered;
     }
@@ -24,12 +24,12 @@ public class ActuatorState {
         isWindowOpen = windowOpen;
     }
 
-    public boolean isDoorClosed() {
-        return isDoorClosed;
+    public boolean isDoorOpen() {
+        return isDoorOpen;
     }
 
-    public void setDoorClosed(boolean doorClosed) {
-        isDoorClosed = doorClosed;
+    public void setDoorOpen(boolean doorOpen) {
+        isDoorOpen = doorOpen;
     }
 
     public boolean isLightOn() {
